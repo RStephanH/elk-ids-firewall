@@ -18,7 +18,8 @@ ensure_dependencies() {
     sudo apt update -y
     sudo apt install -y git cmake g++ libpcap-dev libpcre2-dev \
         zlib1g-dev pkg-config libhwloc-dev luajit libssl-dev \
-        build-essential automake autoconf libtool curl wget bison flex
+        build-essential automake autoconf libtool curl wget bison flex \
+        liblzma-dev
 }
 
 ### -------------------------------

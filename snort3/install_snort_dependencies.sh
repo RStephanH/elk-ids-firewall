@@ -16,7 +16,8 @@ echo "📦 Installing base build dependencies..."
 sudo apt install -y \
     cmake g++ flex bison libpcap-dev libpcre2-dev zlib1g-dev \
     pkg-config libhwloc-dev luajit libssl-dev git build-essential \
-    automake autoconf libtool curl wget texinfo gettext autopoint check
+    automake autoconf libtool curl wget texinfo gettext autopoint check \
+    liblzma-dev
 
 mkdir -p "$WORKDIR"
 pushd "$WORKDIR" > /dev/null
