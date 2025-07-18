@@ -76,6 +76,7 @@ ensure_path_config() {
 ### -------------------------------
 gum style --bold --foreground 205 "🐷 Snort3 Build & Installer Script"
 
+sudo -v #to avoid password typing 
 ensure_dependencies
 clone_snort3
 build_and_install_snort3
