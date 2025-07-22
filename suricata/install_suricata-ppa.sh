@@ -21,7 +21,7 @@ else
     sudo apt-get update
 
     # Install Suricata
-    sudo apt-get install -y suricata
+    sudo apt-get install -y suricata jq
 
     echo "[✓] Suricata installed successfully."
 fi
