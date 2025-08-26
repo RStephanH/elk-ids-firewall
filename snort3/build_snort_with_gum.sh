@@ -7,7 +7,7 @@ set -euo pipefail
 ### -------------------------------
 SNORT_REPO_URL="https://github.com/snort3/snort3.git"
 SNORT_REPO_DIR="$HOME/snort3-src"
-INSTALL_DIR="$HOME/.local"  # So binaries go into ~/.local/bin
+INSTALL_DIR="/usr/local"  # So binaries go into /usr/local
 
 ### -------------------------------
 ### 📦 Install Dependencies
