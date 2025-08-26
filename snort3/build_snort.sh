@@ -7,8 +7,8 @@ set -euo pipefail
 ### -------------------------------
 SNORT_REPO_URL="https://github.com/snort3/snort3.git"
 SNORT_REPO_DIR="$HOME/snort3-src"
-INSTALL_DIR="/opt/snort3"
-LINK_PATH="/usr/local/bin/snort"
+INSTALL_DIR="/usr/local"
+#LINK_PATH="/usr/local/bin/snort"
 
 ### -------------------------------
 ### 📦 Ensure required packages
@@ -76,6 +76,6 @@ echo "🚀 Starting Snort3 build and install..."
 ensure_dependencies
 clone_snort3
 build_and_install_snort3
-add_snort_to_path
+#add_snort_to_path
 echo "🎉 Done! Run: snort -V"
 
