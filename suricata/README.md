@@ -53,3 +53,7 @@ If you’re using the packaged version (Ubuntu/Debian/Kali/etc.), the service by
 
 >[!note]
 >Now, we can test it by creating a personalized rule in `/etc/suricata/rules/local.rules` and run suricata
+
+
+3- Filebeat
+![[filebeat.md]]
