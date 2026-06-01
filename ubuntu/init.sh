@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Arrêter le script en cas d'erreur
+# Stop the script on errors
 set -e
 
 IMAGE_NAME="noble-server-cloudimg-amd64.img"
@@ -9,23 +9,23 @@ SEED_ISO="seed.iso"
 VM_DISK="vm-disk.qcow2"
 VM_NAME="ubuntu-fresh"
 
-echo "=== 1. Vérification de l'image de base Ubuntu 24.04 Cloud ==="
+echo "=== 1. Checking the Ubuntu 24.04 Cloud base image ==="
 if [[ ! -f "$IMAGE_NAME" ]]; then
-  echo "Téléchargement de l'image cloud..."
+  echo "Downloading the cloud image..."
   wget https://cloud-images.ubuntu.com/noble/current/$IMAGE_NAME
 else
-  echo "L'image cloud est déjà présente."
+  echo "The cloud image is already present."
 fi
 
-echo "=== 2. Génération du fichier user-data.yaml ==="
-# Récupération de la clé SSH locale
+echo "=== 2. Generating the user-data.yaml file ==="
+# Retrieve the local SSH key
 if [[ ! -f ~/.ssh/id_ed25519.pub ]]; then
-  echo "Erreur : Clé ~/.ssh/id_ed25519.pub introuvable. Génère-en une avec ssh-keygen."
+  echo "Error: ~/.ssh/id_ed25519.pub not found. Generate one with ssh-keygen."
   exit 1
 fi
 SSH_KEY=$(cat ~/.ssh/id_ed25519.pub)
 
-# Écriture du fichier avec une indentation YAML stricte (2 espaces)
+# Write the file with strict YAML indentation (2 spaces)
 cat >"$USER_DATA" <<EOF
 #cloud-config
 users:
@@ -36,20 +36,20 @@ users:
       - $SSH_KEY
 EOF
 
-echo "=== 3. Création de l'ISO NoCloud (seed.iso) ==="
-# On s'assure que l'ancien ISO est écrasé proprement
+echo "=== 3. Creating the NoCloud ISO (seed.iso) ==="
+# Ensure the old ISO is cleanly overwritten
 rm -f "$SEED_ISO"
 cloud-localds "$SEED_ISO" "$USER_DATA"
 
-echo "=== 4. Nettoyage de l'ancienne VM si elle existe ==="
+echo "=== 4. Cleaning up the old VM if it exists ==="
 sudo virsh destroy "$VM_NAME" 2>/dev/null || true
 sudo virsh undefine "$VM_NAME" --remove-all-storage 2>/dev/null || true
 rm -f "$VM_DISK"
 
-echo "=== 5. Création du disque virtuel copy-on-write ==="
+echo "=== 5. Creating the copy-on-write virtual disk ==="
 qemu-img create -f qcow2 -b "$IMAGE_NAME" -F qcow2 "$VM_DISK" 20G
 
-echo "=== 6. Déploiement de la VM via Libvirt ==="
+echo "=== 6. Deploying the VM via Libvirt ==="
 sudo virt-install \
   --name "$VM_NAME" \
   --ram 2048 \
@@ -62,9 +62,9 @@ sudo virt-install \
   --import
 
 echo "=========================================================="
-echo " VM lancée avec succès ! Étape de configuration en cours. "
-echo " Attends environ 30 secondes avant de te connecter via :  "
-echo "        ssh bruce@<IP_DE_LA_VM>                           "
+echo " VM launched successfully! Configuration is in progress. "
+echo " Wait about 30 seconds before connecting via:            "
+echo "        ssh bruce@<VM_IP>                                 "
 echo "=========================================================="
 sleep 30s
-sudo virsh domiflist "$VM_NAME" | grep -oP '(\d{1,3}\.){3}\d{1,3}' || echo "Erreur : Impossible de récupérer l'IP de la VM. Vérifie avec 'sudo virsh domiflist $VM_NAME'."
+sudo virsh domiflist "$VM_NAME" | grep -oP '(\d{1,3}\.){3}\d{1,3}' || echo "Error: Unable to retrieve the VM IP. Check with 'sudo virsh domiflist $VM_NAME'."
