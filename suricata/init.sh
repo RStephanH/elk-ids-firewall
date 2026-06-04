@@ -28,7 +28,6 @@ if [[ ! -f ~/.ssh/id_ed25519.pub ]]; then
   exit 1
 fi
 SSH_KEY=$(cat ~/.ssh/id_ed25519.pub)
-
 # Write the file with strict YAML indentation (2 spaces)
 cat >"$USER_DATA" <<EOF
 #cloud-config
@@ -52,7 +51,6 @@ write_files:
               macaddress: "$NET_OVS_MAC"
             dhcp4: false
             addresses:
-              - 192.168.100.20/24
 runcmd:
   - netplan apply
   - [bash, -lc, "apt-get update"]
