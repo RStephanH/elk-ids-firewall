@@ -12,7 +12,13 @@ VM_NAME="ubuntu-fresh"
 echo "=== 1. Checking the Ubuntu 24.04 Cloud base image ==="
 if [[ ! -f "$IMAGE_NAME" ]]; then
   echo "Downloading the cloud image..."
-  wget https://cloud-images.ubuntu.com/noble/current/$IMAGE_NAME
+  if command -v wget > /dev/null 2>&1; then
+    wget https://cloud-images.ubuntu.com/noble/current/$IMAGE_NAME
+    
+  else
+    echo "wget is not installed "
+    exit 1
+  fi
 else
   echo "The cloud image is already present."
 fi
@@ -20,8 +26,17 @@ fi
 echo "=== 2. Generating the user-data.yaml file ==="
 # Retrieve the local SSH key
 if [[ ! -f ~/.ssh/id_ed25519.pub ]]; then
-  echo "Error: ~/.ssh/id_ed25519.pub not found. Generate one with ssh-keygen."
-  exit 1
+  read -rp "~/.ssh/id_ed25519.pub not found. Generate a new SSH key now? [y/N] " answer
+  case "$answer" in
+    [yY]|[yY][eE][sS])
+      mkdir -p ~/.ssh
+      ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -N ""
+      ;;
+    *)
+      echo "Error: ~/.ssh/id_ed25519.pub not found. Generate one with ssh-keygen."
+      exit 1
+      ;;
+  esac
 fi
 SSH_KEY=$(cat ~/.ssh/id_ed25519.pub)
 
